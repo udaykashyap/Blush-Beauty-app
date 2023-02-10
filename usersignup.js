@@ -23,7 +23,7 @@ function gotologin() {
 //     date
 //      }
 
-//      let res = await fetch (`http://localhost:3000/customers`,{
+//      let res = await fetch (`https://blush-beauty.onrender.com/customers`,{
 //         method: "POST",
 //         body:JSON.stringify(user_obj),
 //         headers:{
@@ -65,7 +65,7 @@ async function register() {
   };
   //   console.log(user_obj);
   try {
-    let res = await fetch(`http://localhost:3000/customers`, {
+    let res = await fetch(`https://blush-beauty.onrender.com/customers`, {
       method: "POST",
       body: JSON.stringify(user_obj),
       headers: {

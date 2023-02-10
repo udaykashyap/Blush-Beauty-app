@@ -9,7 +9,7 @@ window.onload = () => {
 };
 let getData = async () => {
   let response = await fetch(
-    `http://localhost:3000/orders?_page=${page}&_limit=6`
+    `https://blush-beauty.onrender.com/orders?_page=${page}&_limit=6`
   );
   let data = await response.json();
 
@@ -17,7 +17,7 @@ let getData = async () => {
 };
 const displayData = (data) => {
   let tbody = document.getElementById("tbody");
-  tbody.innerText = "";
+  tbody.innerHTML = "";
   data.forEach((el) => {
     let tr = document.createElement("tr");
     let td1 = document.createElement("td");
@@ -32,7 +32,10 @@ const displayData = (data) => {
     td5.innerText = el.totalproducts;
     let td6 = document.createElement("td");
     td6.innerText = el.status;
-
+    td6.style.cursor = "pointer";
+    td6.onclick = () => {
+      editStatus(el);
+    };
     tr.append(td1, td2, td3, td4, td5, td6);
     tbody.append(tr);
   });
@@ -41,7 +44,7 @@ const displayData = (data) => {
 let button = document.getElementById("page");
 let page = 1;
 const createButton = async () => {
-  let response = await fetch(`http://localhost:3000/orders`);
+  let response = await fetch(`https://blush-beauty.onrender.com/orders`);
 
   let data = await response.json();
   // console.log(data);
@@ -61,4 +64,26 @@ const createButton = async () => {
     };
     button.append(but);
   }
+};
+
+// console.log("hello");
+let editStatus = async ({ id }) => {
+  let status = prompt("Enter the Order Status");
+  let obj = { status };
+
+  try {
+    let response = await fetch(
+      `https://blush-beauty.onrender.com/orders/${id}`,
+      {
+        method: "PATCH",
+        body: JSON.stringify(obj),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    let data = await response.json();
+    getData();
+  } catch (error) {}
 };

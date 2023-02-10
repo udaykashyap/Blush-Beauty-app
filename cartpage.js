@@ -16,7 +16,7 @@ window.onload = () => {
   showName();
 };
 let getData = async () => {
-  let response = await fetch(`http://localhost:3000/cart`);
+  let response = await fetch(`https://blush-beauty.onrender.com/cart`);
   let data = await response.json();
 
   actualdata = data.filter((el) => {
@@ -34,6 +34,8 @@ let cartproduct = document.getElementById("cartproduct");
 let totalprice = 0;
 
 function append(data) {
+  cartproduct.innerHTML = "";
+  totalprice = 0;
   data.forEach(function (el, i) {
     let totalprice2 = totalprice + el.price;
     let div = document.createElement("div");
@@ -45,7 +47,7 @@ function append(data) {
     h4.innerText = "Rs:" + el.price;
     let name = document.createElement("p");
     name.innerText = el.name;
-    name.style = "margin-left:40px";
+    name.style = "margin-left:40px;width:200px;color:grey";
     let span = document.createElement("span");
     span.className = "material-symbols-outlined";
     span.onclick = () => {
@@ -56,7 +58,7 @@ function append(data) {
     span.style.cursor = "pointer";
     div.append(image, h4, name, span);
     cartproduct.append(div);
-
+    cartproduct.style = "height:auto";
     let totalprice1 = document.getElementById("totalprice1");
     totalprice1.innerText = "Rs:" + " " + totalprice2;
     let tptopay = document.getElementById("tptopay");
@@ -69,19 +71,16 @@ function append(data) {
 
 let removeFromCart = async (i) => {
   let id = actualdata[i].id;
-  alert("Item Removed");
+  // alert("Item Removed");
 
-  let response = await fetch(`http://localhost:3000/cart/${id}`, {
+  let response = await fetch(`https://blush-beauty.onrender.com/cart/${id}`, {
     method: "DELETE",
   });
-  let data = await response.json();
-  console.log(data);
+  alert("Item has successfully deleted.");
   getData();
 };
 
 async function placeorder() {
-  alert("Order Placed Successfully");
-
   let date = new Date();
   let day = date.getDate();
   let month = date.getMonth();
@@ -93,7 +92,7 @@ async function placeorder() {
   let phone = logginedUser.phone;
   let totalproducts = actualdata.length;
   // alert(totalproducts);
-  let status = "Order Confirmed";
+  let status = "Pending";
   let obj = {
     date,
     customer_id,
@@ -102,7 +101,7 @@ async function placeorder() {
     status,
   };
 
-  let response = await fetch(`http://localhost:3000/orders`, {
+  let response = await fetch(`https://blush-beauty.onrender.com/orders`, {
     method: "POST",
     body: JSON.stringify(obj),
     headers: {
@@ -112,14 +111,18 @@ async function placeorder() {
 
   let data = await response.json();
 
-  actualdata.forEach(async ({ id }) => {
+  await actualdata.forEach(async (el, i) => {
     // alert(id);
-    let response = await fetch(`http://localhost:3000/cart/${id}`, {
-      method: "DELETE",
-    });
-    let data = await response.json();
+    // let response = await fetch(
+    //   `https://blush-beauty.onrender.com/cart/${id}`,
+    //   {
+    //     method: "DELETE",
+    //   }
+    // );
+    // let data = await response.json();
+    let response = await removeFromCart(i);
   });
-
+  alert("Order Placed Successfully");
   window.location.href = "/profilepage.html";
 }
 

@@ -11,7 +11,7 @@ window.onload = () => {
 
 const getData = async () => {
   let response = await fetch(
-    `http://localhost:3000/products?_page=${page}&_limit=6`
+    `https://blush-beauty.onrender.com/products?_page=${page}&_limit=6`
   );
   let data = await response.json();
 
@@ -39,15 +39,25 @@ const displayData = (data) => {
     td6.onclick = () => {
       removeData(el);
     };
-    tr.append(td1, td2, td3, td4, td5, td6);
+    let td7 = document.createElement("td");
+    td7.innerText = "Edit";
+    td7.onclick = () => {
+      editData(el);
+    };
+    td7.style.cursor = "pointer";
+
+    tr.append(td1, td2, td3, td4, td5, td6, td7);
     tbody.append(tr);
   });
 };
 
 const removeData = async ({ id }) => {
-  let response = await fetch(`http://localhost:3000/products/${id}`, {
-    method: "DELETE",
-  });
+  let response = await fetch(
+    `https://blush-beauty.onrender.com/products/${id}`,
+    {
+      method: "DELETE",
+    }
+  );
 
   let data = await response.json();
   getData();
@@ -56,7 +66,7 @@ const removeData = async ({ id }) => {
 let button = document.getElementById("page");
 let page = 1;
 const createButton = async () => {
-  let response = await fetch(`http://localhost:3000/products`);
+  let response = await fetch(`https://blush-beauty.onrender.com/products`);
 
   let data = await response.json();
   let totalButtons = Math.ceil(data.length / 6);
@@ -74,4 +84,34 @@ const createButton = async () => {
     };
     button.append(but);
   }
+};
+
+let editData = async ({ id }) => {
+  let price = +prompt("Enter the new price");
+  let obj = {
+    price,
+  };
+  try {
+    let response = await fetch(
+      `https://blush-beauty.onrender.com/products/${id}`,
+      {
+        method: "PATCH",
+        body: JSON.stringify(obj),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    let data = await response.json();
+    // console.log(data);
+    getData();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+let addProducts = document.getElementById("addProducts");
+
+addProducts.onclick = () => {
+  window.location.href = "Add_product.html";
 };

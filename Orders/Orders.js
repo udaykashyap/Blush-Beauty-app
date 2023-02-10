@@ -38,3 +38,8 @@ option6.addEventListener("click",()=>
 {
    window.location.href="Setting.html";
 });
+const option7 = document.getElementById("Orders");
+option7.addEventListener("click",()=>
+{
+   window.location.href="Orders.html";
+});
